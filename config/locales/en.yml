@@ -207,6 +207,11 @@ en:
       new_country: New country
       tld: TLD
       update_notice: Country has been updated successfully
+      subdivisions: Subdivisions
+    
+    country_subdivisions:
+      name: Name
+      code: Code
 
     delivery_service_prices:
       all_countries: All Countries
@@ -516,6 +521,7 @@ en:
     tax_rates:
       address_type_option: "Apply to orders where the %{address} address matches one of the countries below"
       all_countries: All countries
+      all_country_subdivisions: All country subdivisions
       back_to_tax_rates: Back to tax rates
       billing: billing
       country_restriction: Country Restriction

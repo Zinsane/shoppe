@@ -6,6 +6,11 @@ module Shoppe
     # @return [Shoppe::Country]
     belongs_to :billing_country, :class_name => 'Shoppe::Country', :foreign_key => 'billing_country_id'
 
+    # The country subdivision which this order should be billed to
+    #
+    # @return [Shoppe::CountrySubdivision]
+    belongs_to :billing_subdivision, :class_name => 'Shoppe::CountrySubdivision', :foreign_key => 'billing_subdivision_id'
+
     # Payments which have been stored for the order
     has_many :payments, :dependent => :destroy, :class_name => 'Shoppe::Payment'
 

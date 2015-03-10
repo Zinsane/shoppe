@@ -40,7 +40,7 @@ module Shoppe
     private
 
     def safe_params
-      params[:country].permit(:name, :code2, :code3, :continent, :tld, :currency, :eu_member)
+      params[:country].permit(:name, :code2, :code3, :continent, :tld, :currency, :eu_member, subdivisions_array: [:name, :code])
     end
 
   end

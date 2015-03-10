@@ -20,10 +20,16 @@ namespace :shoppe do
     Shoppe::CountryImporter.import
   end
   
+  desc "Import default set of country subdivisions"
+  task :import_country_subdivisions => :environment do
+    Shoppe::CountrySubdivisionImporter.import
+  end
+  
   desc "Run the key setup tasks for a new application"
   task :setup => :environment do
-    Rake::Task["shoppe:import_countries"].invoke    if Shoppe::Country.all.empty?
-    Rake::Task["shoppe:create_default_user"].invoke if Shoppe::User.all.empty?
+    Rake::Task["shoppe:import_countries"].invoke            if Shoppe::Country.all.empty?
+    Rake::Task["shoppe:import_country_subdivisions"].invoke if Shoppe::CountrySubdivision.all.empty?
+    Rake::Task["shoppe:create_default_user"].invoke         if Shoppe::User.all.empty?
   end
   
 end

@@ -10,6 +10,9 @@ module Shoppe
   class Country < ActiveRecord::Base
     
     self.table_name = 'shoppe_countries'
+
+    # Add dependencies for countries
+    require_dependency 'shoppe/country/country_subdivisions'
     
     # All orders which have this country set as their billing country
     has_many :billed_orders, :dependent => :restrict_with_exception, :class_name => 'Shoppe::Order', :foreign_key => 'billing_country_id'

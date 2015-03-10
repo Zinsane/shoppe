@@ -26,6 +26,27 @@
           = f.check_box :eu_member
           = f.label :eu_member, t('shoppe.countries.is_eu_member')
 
+  = field_set_tag t('shoppe.countries.subdivisions') do
+    .margin
+      %table.countrySubdivisions
+        %thead
+          %tr
+            %td= t('shoppe.country_subdivisions.code')
+            %td= t('shoppe.country_subdivisions.name')
+            %td.remove= t('shoppe.remove')
+        %tbody
+          %tr.template{:style => 'display:none;'}
+            %td= text_field_tag 'country[subdivisions_array][][code]', '', :placeholder => t('shoppe.country_subdivisions.code')
+            %td= text_field_tag 'country[subdivisions_array][][name]', '', :placeholder => t('shoppe.country_subdivisions.name')            
+            %td.remove= link_to t('shoppe.remove') , '#', :class => 'button button-mini purple'
+          - for subdivision in @country.subdivisions
+            %tr
+              %td= text_field_tag 'country[subdivisions_array][][code]', subdivision.code, :placeholder => t('shoppe.country_subdivisions.code')
+              %td= text_field_tag 'country[subdivisions_array][][name]', subdivision.name, :placeholder => t('shoppe.country_subdivisions.name')
+              %td.remove= link_to t("shoppe.remove"), '#', :class => 'button button-mini purple'
+      %p.addSubdivision= link_to t('shoppe.countries.add_subdivision') , '#', :data => {:behavior => 'addSubdivisionToSubdivisionsTable'}, :class => 'button button-mini green'
+
+
   %p.submit
     - unless @country.new_record?
       %span.right

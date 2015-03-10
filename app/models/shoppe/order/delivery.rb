@@ -11,6 +11,11 @@ module Shoppe
     # @return [Shoppe::Country]
     belongs_to :delivery_country, :class_name => 'Shoppe::Country', :foreign_key => 'delivery_country_id'
 
+    # The subdivision where this order is being delivered to (if one has been provided)
+    #
+    # @return [Shoppe::CountrySubdivision]
+    belongs_to :delivery_subdivision, :class_name => 'Shoppe::CountrySubdivision', :foreign_key => 'delivery_subdivision_id'
+
     # The user who marked the order has shipped
     #
     # @return [Shoppe::User]
@@ -70,12 +75,13 @@ module Shoppe
         self.delivery_address4 = nil
         self.delivery_postcode = nil
         self.delivery_country = nil
+        self.delivery_subdivision = nil
       end
     end
 
     # Create some delivery_ methods which will mimic the billing methods if the order does
     # not need a seperate address.
-    [:delivery_name, :delivery_address1, :delivery_address2, :delivery_address3, :delivery_address4, :delivery_postcode, :delivery_country].each do |f|
+    [:delivery_name, :delivery_address1, :delivery_address2, :delivery_address3, :delivery_address4, :delivery_postcode, :delivery_country, :delivery_subdivision].each do |f|
       define_method(f) do
         separate_delivery_address? ? super() : send(f.to_s.gsub('delivery_', 'billing_'))
       end

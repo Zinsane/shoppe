@@ -39,6 +39,19 @@ $ ->
         $(this).width(originals.eq(index).width())
       helper
   
+  # Add a new country subdivision to a table
+  $('a[data-behavior=addSubdivisionToSubdivisionsTable]').on 'click', ->
+    table = $('table.countrySubdivisions')
+    if $('tbody tr', table).length == 1 || $('tbody tr:last td:first input', table).val().length > 0
+      template = $('tr.template', table).html()
+      table.append("<tr>#{template}</tr>")
+    false
+
+  # Remove an country subdivision from a table
+  $('table.countrySubdivisions tbody').on 'click', 'tr td.remove a', ->
+    $(this).parents('tr').remove()
+    false
+
   # Chosen
   $('select.chosen').chosen()
   $('select.chosen-with-deselect').chosen({allow_single_deselect: true})
