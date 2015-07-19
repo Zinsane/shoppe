@@ -1,6 +1,68 @@
-# Shoppe Release Notes
+# Shoppe Change Log
 
-This document outlines key changes which are introduced in each version. The full commit history can be found [on GitHub](http://github.com/tryshoppe/core).
+All notable changes to this project will be documented in this file.
+
+The full commit history can be found [on GitHub](http://github.com/tryshoppe/core).
+
+## Unreleased
+- ...
+
+## 1.1.0 - 2015-07-07
+### Fixed
+- Bug with product category translations
+- Product category image uploads
+
+## v1.0.9 (Released)
+
+* Attachments ([#211](https://github.com/tryshoppe/shoppe/pull/211))
+* Added rake task to help with migration from nifty-attachments to Attachments
+* Fixed translation ([#205](https://github.com/tryshoppe/shoppe/pull/205))
+
+## v1.0.8
+
+* Localisations / Translations for Products & Product Categories
+* Customers & Addresses ([#167](https://github.com/tryshoppe/shoppe/pull/167))
+
+## v1.0.7
+
+* Fix to seeds
+* Product category hierarchy_array ([#194](https://github.com/tryshoppe/shoppe/pull/194))
+
+## v1.0.6
+
+* German translations ([#180](https://github.com/tryshoppe/shoppe/pull/180))
+* Multiple product categories with nesting ([#137](https://github.com/tryshoppe/shoppe/pull/137))
+* Added refund callback to Payment model 
+
+## v1.0.5
+
+* Added Customers ([#119](https://github.com/tryshoppe/shoppe/pull/119))
+
+* Fixed creation of orders in admin interface
+
+* Updated gemspec for Rails 4.2.0 ([#162](https://github.com/tryshoppe/shoppe/pull/162))
+
+* Fixed issue where order callbacks weren't being executed on order `accept!` and `reject!` methods ([#166](https://github.com/tryshoppe/shoppe/pull/166))
+
+## v1.0.4
+
+* Added `items_sub_total` method to Orders
+
+* Extracted text to locale files ([#83](https://github.com/tryshoppe/shoppe/pull/83))
+
+* Polish translations
+
+* Permalink Validations ([#127](https://github.com/tryshoppe/shoppe/pull/127))
+
+* Moved Order email actions to separate methods ([#130](https://github.com/tryshoppe/shoppe/pull/130))
+
+* Added index to all tables ([#131](https://github.com/tryshoppe/shoppe/pull/131))
+
+* Spanish translations ([#135](https://github.com/tryshoppe/shoppe/pull/135))
+
+* Fixed HAML render error & added support for decorators ([#138](https://github.com/tryshoppe/shoppe/pull/138))
+
+* Updated Nifty Dialog ([#150](https://github.com/tryshoppe/shoppe/issues/150))
 
 ## v1.0.0
 

@@ -6,11 +6,12 @@ require 'bcrypt'
 require 'dynamic_form'
 require 'kaminari'
 require 'ransack'
+require "globalize"
 
 require 'nifty/utils'
 require 'nifty/key_value_store'
-require 'nifty/attachments'
 require 'nifty/dialog'
+require 'carrierwave'
 
 module Shoppe
   class << self

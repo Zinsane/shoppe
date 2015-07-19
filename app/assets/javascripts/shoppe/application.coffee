@@ -13,6 +13,10 @@ $ ->
   # When clicking the order search button, toggle the form
   $('a[rel=searchOrders]').on 'click', ->
     $('div.orderSearch').toggle()
+
+  # When clicking the customer search button, toggle the form
+  $('a[rel=searchCustomers]').on 'click', ->
+    $('div.customerSearch').toggle()
   
   # Add a new attribute to a table
   $('a[data-behavior=addAttributeToAttributesTable]').on 'click', ->
@@ -38,6 +42,11 @@ $ ->
       helper.children().each (index)->
         $(this).width(originals.eq(index).width())
       helper
+
+  $('a[data-behavior=addAttachmentToExtraAttachments]').on 'click', (event) ->
+    event.preventDefault();
+    $('div.extraAttachments').show();
+    $(this).hide();
   
   # Add a new country subdivision to a table
   $('a[data-behavior=addSubdivisionToSubdivisionsTable]').on 'click', ->

@@ -1,4 +1,5 @@
-require 'roo'
+require "roo"
+require "globalize"
 
 module Shoppe
   class Product < ActiveRecord::Base
@@ -9,14 +10,17 @@ module Shoppe
     require_dependency 'shoppe/product/product_attributes'
     require_dependency 'shoppe/product/variants'
 
-    # Products have a default_image and a data_sheet
-    attachment :default_image
-    attachment :data_sheet
+    # Attachments for this product
+    has_many :attachments, :as => :parent, :dependent => :destroy, :autosave => true, :class_name => "Shoppe::Attachment"
 
-    # The product's category
+    # The product's categorizations
+    #
+    # @return [Shoppe::ProductCategorization]
+    has_many :product_categorizations, dependent: :destroy, class_name: 'Shoppe::ProductCategorization', inverse_of: :product
+    # The product's categories
     #
     # @return [Shoppe::ProductCategory]
-    belongs_to :product_category, :class_name => 'Shoppe::ProductCategory'
+    has_many :product_categories, class_name: 'Shoppe::ProductCategory', through: :product_categorizations
 
     # The product's tax rate
     #
@@ -34,7 +38,7 @@ module Shoppe
 
     # Validations
     with_options :if => Proc.new { |p| p.parent.nil? } do |product|
-      product.validates :product_category_id, :presence => true
+      product.validate :has_at_least_one_product_category
       product.validates :description, :presence => true
       product.validates :short_description, :presence => true
     end
@@ -54,8 +58,16 @@ module Shoppe
     # All featured products
     scope :featured, -> {where(:featured => true)}
 
-    # All products ordered with default items first followed by name ascending
-    scope :ordered, -> {order(:default => :desc, :name => :asc)}
+    # Localisations
+    translates :name, :permalink, :description, :short_description
+    scope :ordered, -> { includes(:translations).order(:name) }
+
+    def attachments=(attrs)
+      if attrs["default_image"]["file"].present? then self.attachments.build(attrs["default_image"]) end
+      if attrs["data_sheet"]["file"].present? then self.attachments.build(attrs["data_sheet"]) end
+
+      if attrs["extra"]["file"].present? then attrs["extra"]["file"].each { |attr| self.attachments.build(file: attr, parent_id: attrs["extra"]["parent_id"], parent_type: attrs["extra"]["parent_type"]) } end
+    end
 
     # Return the name of the product
     #
@@ -77,6 +89,7 @@ module Shoppe
     #
     # @return [BigDecimal]
     def price
+      # self.default_variant ? self.default_variant.price : read_attribute(:price)
       self.default_variant ? self.default_variant.price : read_attribute(:price)
     end
 
@@ -94,6 +107,27 @@ module Shoppe
       self.stock_level_adjustments.sum(:adjustment)
     end
 
+    # Return the first product category
+    #
+    # @return [Shoppe::ProductCategory]
+    def product_category
+      self.product_categories.first rescue nil
+    end
+
+    # Return attachment for the default_image role
+    # 
+    # @return [String]
+    def default_image
+      self.attachments.for("default_image")
+    end
+
+    # Return attachment for the data_sheet role
+    # 
+    # @return [String]
+    def data_sheet
+      self.attachments.for("data_sheet")
+    end
+
     # Search for products which include the given attributes and return an active record
     # scope of these products. Chainable with other scopes and with_attributes methods.
     # For example:
@@ -105,7 +139,7 @@ module Shoppe
       product_ids = Shoppe::ProductAttribute.searchable.where(:key => key, :value => values).pluck(:product_id).uniq
       where(:id => product_ids)
     end
-  
+
     # Imports products from a spreadsheet file
     # Example:
     #
@@ -133,20 +167,18 @@ module Shoppe
             product.short_description = row["short_description"]
             product.weight = row["weight"]
             product.price = row["price"].nil? ? 0 : row["price"]
+            product.permalink  = row["permalink"]
 
-            product.product_category_id = begin
+            product.product_categories << begin
               if Shoppe::ProductCategory.find_by(name: row["category_name"]).present?
-                # Find and set the category
-                Shoppe::ProductCategory.find_by(name: row["category_name"]).id
+                Shoppe::ProductCategory.find_by(name: row["category_name"])
               else
-                # Create the category
-                Shoppe::ProductCategory.create(name: row["category_name"]).id
+                Shoppe::ProductCategory.create(name: row["category_name"])
               end
             end
 
             product.save!
 
-            # Create quantities
             qty = row["qty"].to_i
             if qty > 0
               product.stock_level_adjustments.create!(description: I18n.t('shoppe.import'), adjustment: qty)
@@ -163,6 +195,14 @@ module Shoppe
       when ".xlsx" then Roo::Excelx.new(file.path)
       else raise I18n.t('shoppe.imports.errors.unknown_format', filename: File.original_filename)
       end
+    end
+
+    private
+
+    # Validates
+
+    def has_at_least_one_product_category
+      errors.add(:base, 'must add at least one product category') if self.product_categories.blank?
     end
 
   end

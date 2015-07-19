@@ -5,7 +5,6 @@ catalogue-based store into your Rails 4 applications.
 
 ![GemVersion](https://badge.fury.io/rb/shoppe.png)
 [![Code Climate](https://codeclimate.com/github/tryshoppe/core/badges/gpa.svg)](https://codeclimate.com/github/tryshoppe/core)
-[![Build Status](https://travis-ci.org/tryshoppe/core.svg?branch=master)](https://travis-ci.org/tryshoppe/core)
 
 * [Check out the website](http://tryshoppe.com)
 * [View the demo site](http://demo.tryshoppe.com)
@@ -36,10 +35,9 @@ instructions below and you'll be up and running in minutes.
 
     rails new my_store
     cd my_store
-    echo "gem 'shoppe', '~> 1.0'" >> Gemfile
+    echo "gem 'shoppe'" >> Gemfile
     bundle
     rails generate shoppe:setup
-    rails generate nifty:attachments:migration
     rails generate nifty:key_value_store:migration
     rake db:migrate shoppe:setup
     rails server
